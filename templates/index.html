@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SHIVA PANEL</title>
+    <style>
+        body {
+            background-color: #0f172a;
+            color: #f8fafc;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background-color: #1e293b;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            width: 100%;
+            max-width: 400px;
+        }
+        h2 {
+            text-align: center;
+            color: #38bdf8;
+            margin-bottom: 20px;
+        }
+        .input-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #475569;
+            background-color: #0f172a;
+            color: #fff;
+            border-radius: 6px;
+            box-sizing: border-box;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .btn-start {
+            background-color: #22c55e;
+            color: white;
+        }
+        .btn-stop {
+            background-color: #ef4444;
+            color: white;
+        }
+        #status {
+            margin-top: 15px;
+            text-align: center;
+            font-size: 14px;
+            color: #cbd5e1;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>SHIVA PANEL</h2>
+        <div class="input-group">
+            <label>Session ID:</label>
+            <input type="text" id="sessionId" placeholder="Enter Instagram Session ID">
+        </div>
+        <div class="input-group">
+            <label>Thread ID:</label>
+            <input type="text" id="threadId" placeholder="Enter Chat/Thread ID">
+        </div>
+        <div class="input-group">
+            <label>Message:</label>
+            <textarea id="message" rows="3" placeholder="Enter message to spam"></textarea>
+        </div>
+        
+        <button class="btn-start" onclick="startRaid()">Start Raid</button>
+        <button class="btn-stop" onclick="stopRaid()">Stop Raid</button>
+        
+        <div id="status"></div>
+    </div>
+
+    <script>
+        function startRaid() {
+            const session_id = document.getElementById('sessionId').value;
+            const thread_id = document.getElementById('threadId').value;
+            const message = document.getElementById('message').value;
+            const statusDiv = document.getElementById('status');
+
+            statusDiv.innerText = "Starting...";
+
+            fetch('/start', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ session_id, thread_id, message })
+            })
+            .then(response => response.json())
+            .then(data => {
+                statusDiv.innerText = data.status;
+            })
+            .catch(err => {
+                statusDiv.innerText = "Error starting raid!";
+            });
+        }
+
+        function stopRaid() {
+            const statusDiv = document.getElementById('status');
+            statusDiv.innerText = "Stopping...";
+
+            fetch('/stop', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' }
+            })
+            .then(response => response.json())
+            .then(data => {
+                statusDiv.innerText = data.status;
+            })
+            .catch(err => {
+                statusDiv.innerText = "Error stopping raid!";
+            });
+        }
+    </script>
+
+</body>
+</html>
